@@ -11,8 +11,6 @@ module GitPusshuTen
       example     "heavenly rvm uninstall-ruby for production      # Uninstalls an installed Ruby under RVM."
       example     "heavenly rvm remove-ruby for production         # Uninstalls and removes the Ruby's complete source from RVM."
       example     "heavenly rvm set-default-ruby for production    # Sets the system wide default Ruby."
-      example     "                                                  This is required if you want to change the Ruby version"
-      example     "                                                  for your Ruby applications running Passenger."
 
       def initialize(*objects)
         super

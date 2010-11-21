@@ -17,5 +17,5 @@ Dir[File.expand_path(File.join(File.dirname(__FILE__), 'gitpusshuten/**/*'))].ea
 end
 
 module GitPusshuTen
-  VERSION = '0.0.1'
+  VERSION = '0.0.3'
 end
