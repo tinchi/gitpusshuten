@@ -31,7 +31,7 @@ module GitPusshuTen
           exit
         end
         message "Going to install Redis Key-Value store systemwide"
-        Spinner.return :message => "Installing #{y('Redis')}" do
+        Spinner.return :message => "Installing #{y('Redis')}.." do
           e.install!("redis-server")
           g('Done!')
         end
@@ -68,7 +68,7 @@ module GitPusshuTen
       
       def download_redis_configuration_from_server!
         FileUtils.mkdir_p(@local_configuration_dir)
-        Spinner.return :message => "Downloading redis configuration from the server" do
+        Spinner.return :message => "Downloading redis configuration from the server.." do
           e.scp_as_root(:download, @configuration_file, "#{@local_configuration_file}")
           g("Finished downloading!")
         end
