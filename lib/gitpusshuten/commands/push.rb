@@ -6,6 +6,8 @@ module GitPusshuTen
       example     "heavenly push branch develop to staging                                    # Pushes the specified branch to the staging environment."
       example     "heavenly push tag 1.0.3 to staging                                         # Pushes the specified tag to the staging environment."
       example     "heavenly push ref 2dbec02aa0b8604b8512e2fcbb8aac582c7f6a73 to production   # Pushes the specified ref to the production environment."
+      example     "heavenly push production                                                   # Pushes the master branch to the production environment. (Conventional)"
+      example     "heavenly push staging                                                      # Pushes the develop branch to the staging environment. (Conventional)"
 
       attr_accessor :type
 
@@ -47,6 +49,23 @@ module GitPusshuTen
       def set_remote!
         git.remove_remote(e.name) if git.has_remote?(e.name)
         git.add_remote(e.name, "ssh://#{c.user}@#{c.ip}:#{c.port}/#{e.app_dir}")
+      end
+
+      ##
+      # Conventional command actions
+
+      ##
+      # Pushes the master branch to the production environment.
+      def perform_production!
+        message "Pushing branch master to the production environment."
+        git.push(:branch, "master").to("production")
+      end
+      
+      ##
+      # Pushes the master branch to the production environment.
+      def perform_stage!
+        message "Pushing branch develop to the stage environment."
+        git.push(:branch, "develop").to("staging")
       end
 
     end

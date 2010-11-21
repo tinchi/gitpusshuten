@@ -56,7 +56,7 @@ module GitPusshuTen
     ##
     # Wrapper for the command instance
     def command
-      @command ||= "GitPusshuTen::Commands::#{cli.command.classify}".constantize.new(cli, configuration, hooks, environment)
+      @command ||= "GitPusshuTen::Commands::#{classify_with_plural(cli.command)}".constantize.new(cli, configuration, hooks, environment)
     end
 
     ##
@@ -134,13 +134,25 @@ module GitPusshuTen
     ##
     # Returns the constant of a command
     def get_constant_for(command)
-      "GitPusshuTen::Commands::#{command.classify}".constantize
+      "GitPusshuTen::Commands::#{classify_with_plural(command)}".constantize
     end
 
     ##
     # Wrapper for coloring text yellow
     def y(value)
       value.to_s.color(:yellow)
+    end
+
+    ##
+    # Classifies the command, but re-pluralizes it in case
+    # it ended with the 's' character to ensure the correct
+    # command is being invoked
+    def classify_with_plural(word)
+      if word =~ /s$/
+        word.classify + 's'
+      else
+        word.classify
+      end
     end
 
   end
