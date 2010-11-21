@@ -3,7 +3,7 @@ module GitPusshuTen
   module Commands
     class Redi < GitPusshuTen::Commands::Base
       description "[Module] Redis commands."
-      usage       "redis <command>"
+      usage       "redis <command> for <enviroment>"
       example     "heavenly redis install                # Installs Redis (system wide) and downloads config template."
       example     "heavenly redis upload-config          # Uploads config template to the server, will install if not"
 
@@ -18,9 +18,10 @@ module GitPusshuTen
         ##
         # Default Configuration
         @installation_dir           = "/etc/redis"
-        @configuration_directory    = @installation_dir
-        @configuration_file         = File.join(@configuration_directory, 'redis.conf')
-        @local_configuration_file   = File.join(local.gitpusshuten_dir, 'redis', "redis.conf")  
+        @configuration_dir          = @installation_dir
+        @configuration_file         = File.join(@configuration_dir, 'redis.conf')
+        @local_configuration_dir    = File.join(local.gitpusshuten_dir, 'redis')
+        @local_configuration_file   = File.join(@local_configuration_dir, "redis.conf")  
       end
       
       def perform_install!
@@ -35,7 +36,7 @@ module GitPusshuTen
         end
         
         create_file = true
-        if File.exist?( @local_configuration_file)
+        if File.exist?(@local_configuration_file)
           warning "#{y( @local_configuration_file)} already exists, do you want to overwrite it?"
           create_file = yes?
         end  
@@ -58,15 +59,16 @@ module GitPusshuTen
           message "Redis configuration has been fetched from the server, edit it and upload it again."
           exit
         end
-        Spinner.return :message => "Uploading Redis configuration file #{y(conf_file)}.." do
-          e.scp_as_root(:upload, @local_configuration_file, @configuration_file)
+        Spinner.return :message => "Uploading Redis configuration file #{y(@local_configuration_file)}.." do
+          e.scp_as_root(:upload, @local_configuration_file, @configuration_dir)
           g('Done!')
         end
       end
       
       def download_redis_configuration_from_server!
+        #Dir.mkdir(@local_configuration_dir) unless @local_configuration_dir
         Spinner.return :message => "Downloading redis configuration from the server" do
-          e.scp_as_root(:download, @configuration_file, @local_configuration_file)
+          e.scp_as_root(:download, @configuration_file, "#{@local_configuration_dir}/redis.conf")
           g("Finished downloading!")
         end
       end
