@@ -1,3 +1,4 @@
+require 'FileUtils'
 require 'open-uri'
 require 'yaml'
 
@@ -8,8 +9,7 @@ require 'net/ssh'
 require 'net/scp'
 require 'highline/import'
 require 'rainbow'
-require 'json' 
-require "FileUtils"
+require 'json'
 
 Dir[File.expand_path(File.join(File.dirname(__FILE__), 'gitpusshuten/**/*'))].each do |file|
   if not File.directory?(file) and not file =~ /\/modules\/.+\/hooks\.rb/
@@ -18,5 +18,5 @@ Dir[File.expand_path(File.join(File.dirname(__FILE__), 'gitpusshuten/**/*'))].ea
 end
 
 module GitPusshuTen
-  VERSION = '0.0.3'
+  VERSION = '0.0.1'
 end

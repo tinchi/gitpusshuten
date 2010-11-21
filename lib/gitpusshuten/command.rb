@@ -142,10 +142,14 @@ module GitPusshuTen
     def y(value)
       value.to_s.color(:yellow)
     end
-    
+
+    ##
+    # Classifies the command, but re-pluralizes it in case
+    # it ended with the 's' character to ensure the correct
+    # command is being invoked
     def classify_with_plural(word)
       if word =~ /s$/
-        word.classify + "s"
+        word.classify + 's'
       else
         word.classify
       end

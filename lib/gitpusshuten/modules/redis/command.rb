@@ -4,17 +4,18 @@ module GitPusshuTen
     class Redis < GitPusshuTen::Commands::Base
       description "[Module] Redis commands."
       usage       "redis <command> for <enviroment>"
-      example     "heavenly redis install                # Installs Redis (system wide) and downloads config template."
-      example     "heavenly redis upload-config          # Uploads config template to the server, will install if not"
+      example     "heavenly redis install                 # Installs Redis (system wide) and downloads config template."
+      example     "heavenly redis upload-configuration    # Uploads the Redis configuration template to the server, will install Redis if not already present."
 
       def initialize(*objects)
         super
-
+        
         @command = cli.arguments.shift
-
+        
         help if command.nil? or e.name.nil?
-
+        
         @command = @command.underscore
+        
         ##
         # Default Configuration
         @installation_dir           = "/etc/redis"
@@ -23,7 +24,7 @@ module GitPusshuTen
         @local_configuration_dir    = File.join(local.gitpusshuten_dir, 'redis')
         @local_configuration_file   = File.join(@local_configuration_dir, "redis.conf")  
       end
-      
+
       def perform_install!
         if e.installed?('redis-server')
           error "Redis is already installed."
@@ -46,13 +47,13 @@ module GitPusshuTen
         end
       end
       
-      def perform_upload_config!
+      def perform_upload_configuration!
         unless e.directory?(@installation_dir)
           error "Could not find the Redis installation directory in #{y(@installation_dir)}"
           perform_install!
           exit
         end
-    
+        
         unless File.exist?(@local_configuration_file)
           error "Could not find the local Redis configuration file in #{y(@local_configuration_file)}"
           download_redis_configuration_from_server!
@@ -72,7 +73,7 @@ module GitPusshuTen
           g("Finished downloading!")
         end
       end
-      
+
     end
   end
 end
