@@ -1,7 +1,7 @@
 # encoding: utf-8
 module GitPusshuTen
   module Commands
-    class Redi < GitPusshuTen::Commands::Base
+    class Redis < GitPusshuTen::Commands::Base
       description "[Module] Redis commands."
       usage       "redis <command> for <enviroment>"
       example     "heavenly redis install                # Installs Redis (system wide) and downloads config template."
@@ -66,9 +66,9 @@ module GitPusshuTen
       end
       
       def download_redis_configuration_from_server!
-        #Dir.mkdir(@local_configuration_dir) unless @local_configuration_dir
+        FileUtils.mkdir_p(@local_configuration_dir)
         Spinner.return :message => "Downloading redis configuration from the server" do
-          e.scp_as_root(:download, @configuration_file, "#{@local_configuration_dir}/redis.conf")
+          e.scp_as_root(:download, @configuration_file, "#{@local_configuration_file}")
           g("Finished downloading!")
         end
       end
