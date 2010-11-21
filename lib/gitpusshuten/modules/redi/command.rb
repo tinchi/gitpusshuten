@@ -1,7 +1,7 @@
 # encoding: utf-8
 module GitPusshuTen
   module Commands
-    class Redis < GitPusshuTen::Commands::Base
+    class Redi < GitPusshuTen::Commands::Base
       description "[Module] Redis commands."
       usage       "redis <command>"
       example     "heavenly redis install                # Installs Redis (system wide) and downloads config template."
