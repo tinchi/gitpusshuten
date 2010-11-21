@@ -56,7 +56,7 @@ module GitPusshuTen
     ##
     # Wrapper for the command instance
     def command
-      @command ||= "GitPusshuTen::Commands::#{classify_command_with_plural}".constantize.new(cli, configuration, hooks, environment)
+      @command ||= "GitPusshuTen::Commands::#{classify_with_plural(cli.command)}".constantize.new(cli, configuration, hooks, environment)
     end
 
     ##
@@ -134,7 +134,7 @@ module GitPusshuTen
     ##
     # Returns the constant of a command
     def get_constant_for(command)
-      "GitPusshuTen::Commands::#{command.classify}".constantize
+      "GitPusshuTen::Commands::#{classify_with_plural(command)}".constantize
     end
 
     ##
@@ -143,11 +143,11 @@ module GitPusshuTen
       value.to_s.color(:yellow)
     end
     
-    def classify_command_with_plural
-      if cli.command =~ /s$/
-        cli.command.classify + "s"
+    def classify_with_plural(word)
+      if word =~ /s$/
+        word.classify + "s"
       else
-        cli.command.classify
+        word.classify
       end
     end
 
