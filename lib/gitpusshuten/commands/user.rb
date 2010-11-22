@@ -11,6 +11,8 @@ module GitPusshuTen
       example     "$(heavenly user login to staging)              # Logs the user in to the staging environment as user."
       example     "$(heavenly user login-root to production)      # Logs the user in to the production environment as root."
 
+      attr_accessor :original_use_sudo_value
+
       def initialize(*objects)
         super
         
@@ -19,11 +21,18 @@ module GitPusshuTen
         help if command.nil? or e.name.nil?
         
         @command = command.underscore
+        
+        @original_use_sudo_value = c.use_sudo
       end
       
       ##
       # Sets up a new UNIX user and configures it based on the .gitpusshuten/config.rb
       def perform_add!
+
+        ##
+        # Force override the c.use_sudo for the perform_add! method
+        c.use_sudo = false
+        
         if not e.user_exists? # prompts root
           message "It looks like #{y(c.user)} does not yet exist."
           message "Would you like to add #{y(c.user)} to #{y(c.application)} (#{y(c.ip)})?"
@@ -65,6 +74,10 @@ module GitPusshuTen
         configure_user!
         
         ##
+        # Reset the c.use_sudo back to it's original value
+        c.use_sudo = original_use_sudo_value
+        
+        ##
         # Finished adding user!
         message "Finished adding and configuring #{y(c.user)}!"
         message "You should now be able to push your application to #{y(c.application)} at #{y(c.ip)}."
@@ -73,6 +86,11 @@ module GitPusshuTen
       ##
       # Removes the user and home directory
       def perform_remove!
+        
+        ##
+        # Force override the c.use_sudo for the perform_add! method
+        c.use_sudo = false
+        
         if e.user_exists?
           warning "Are you #{y('SURE')} you want to remove #{y(c.user)}?"
           warning "Doing so will also remove #{y(e.home_dir)}, in which the #{y('applications')} of #{y(c.user)} are."
@@ -93,6 +111,11 @@ module GitPusshuTen
         else
           error "User #{y(c.user)} does not exist at #{y(c.ip)}."
         end
+        
+        ##
+        # Force override the c.use_sudo for the perform_add! method
+        c.use_sudo = original_use_sudo_value
+        
       end
 
       ##
