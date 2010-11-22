@@ -7,7 +7,9 @@ module GitPusshuTen
       example     "heavenly nginx setup staging environment            # Sets up a managable vhost environment."
       example     "heavenly nginx update-configuration for staging     # Only for Passenger users, when updating Ruby/Passenger versions."
       example     "heavenly nginx download-configuration from staging  # Downloads the Nginx configuration file from the specified environment."
+      example     "               download-config                      # Alias."
       example     "heavenly nginx upload-configuration to staging      # Uploads the NginX configuration file to the specified environment."
+      example     "               upload-config                        # Alias."
       example     "heavenly nginx create-vhost for production          # Creates a local vhost template for the specified environment."
       example     "heavenly nginx delete-vhost from production         # Deletes the remote vhost for the specified environment."
       example     "heavenly nginx upload-vhost to staging              # Uploads your local vhost to the server for the specified environment."
@@ -137,7 +139,7 @@ module GitPusshuTen
 
       ##
       # Downloads the NginX configuration file
-      def perform_download_config!
+      def perform_download_configuration!
         find_nginx!
         if not @nginx_conf
           error "Could not find the NginX configuration file in #{y(@nginx_conf)}"
@@ -153,8 +155,14 @@ module GitPusshuTen
       end
 
       ##
+      # Alias to perform_download_configuration!
+      def perform_download_config!
+        perform_download_configuration!
+      end
+
+      ##
       # Uploads the NginX configuration file
-      def perform_upload_config!
+      def perform_upload_configuration!
         find_nginx!
         if not e.directory?('/etc/nginx')
           error "Could not find the NginX installation directory in #{y('/etc/nginx')}"
@@ -171,6 +179,12 @@ module GitPusshuTen
           e.scp_as_root(:upload, local_configuration_file, @nginx_conf)
           g('Done!')
         end
+      end
+
+      ##
+      # Alias to perform_upload_configuration!
+      def perform_upload_config!
+        perform_upload_configuration!
       end
 
       ##

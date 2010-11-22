@@ -6,6 +6,7 @@ module GitPusshuTen
       usage       "redis <command> for <enviroment>"
       example     "heavenly redis install                 # Installs Redis (system wide) and downloads config template."
       example     "heavenly redis upload-configuration    # Uploads the Redis configuration template to the server, will install Redis if not already present."
+      example     "               upload-config           # Alias."
 
       def initialize(*objects)
         super
@@ -65,7 +66,13 @@ module GitPusshuTen
           g('Done!')
         end
       end
-      
+
+      ##
+      # Alias to perform_upload_configuration!
+      def perform_upload_config!
+        perform_upload_configuration!
+      end
+
       def download_redis_configuration_from_server!
         FileUtils.mkdir_p(@local_configuration_dir)
         Spinner.return :message => "Downloading redis configuration from the server.." do
