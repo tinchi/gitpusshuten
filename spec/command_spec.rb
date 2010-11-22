@@ -13,7 +13,7 @@ describe GitPusshuTen::Command do
   end
   
   it "should error out if the command was not found" do
-    GitPusshuTen::Log.expects(:error).with('Command <non_existing_command> not found.')
+    GitPusshuTen::Log.expects(:error).with("Command <non_existing_command> not found.")
     GitPusshuTen::Command.any_instance.expects(:exit)
     
     GitPusshuTen::Command.new(cli, configuration, hooks, environment)
@@ -50,6 +50,23 @@ describe GitPusshuTen::Command do
     command.command
   end
   
+  describe "executed as root" do
+    let(:command_initializer) { GitPusshuTen::Command.new(cli, configuration, hooks, environment) }
+    let(:command)             { command_initializer.command }
+
+    before do
+      cli.stubs(:command).returns('non_existing_root_command')
+      GitPusshuTen::Command.any_instance.stubs(:exit)
+      GitPusshuTen::Log.stubs(:error)
+      command.stubs(:validate!)
+    end
+
+    it "should ask for the root password" do
+      environment.expects(:execute_as_root).with('')
+      command_initializer.perform!
+    end
+  end
+
   describe "perform hooks" do
     let(:command_initializer) { GitPusshuTen::Command.new(cli, configuration, hooks, environment) }
     let(:command)             { command_initializer.command }
