@@ -36,7 +36,7 @@ module GitPusshuTen
       if File.exist?(hooks_file)
         instance_eval(File.read(hooks_file))
       else
-        GitPusshuTen::Log.warning "Could not locate the hooks.rb file."
+        GitPusshuTen::Log.warning "Could not locate the hooks.rb file in #{hooks_file.color(:yellow)}"
       end
       self
     end

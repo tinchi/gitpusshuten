@@ -34,6 +34,11 @@ module GitPusshuTen
     attr_accessor :force_parse
 
     ##
+    # Whether to use sudo to execute tasks as root (when false, commands
+    # requiring root access are run as root directly)
+    attr_accessor :use_sudo
+
+    ##
     # Configure
     # helper method for the pusshuten configuration method
     def configure
@@ -113,7 +118,8 @@ module GitPusshuTen
       
       ##
       # Default to port 22 if no port is specified
-      @port ||= '22'
+      @port      ||= '22'
+      @use_sudo  ||= false
       
       self
     end

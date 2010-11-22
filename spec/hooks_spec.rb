@@ -27,7 +27,10 @@ describe GitPusshuTen::Hooks do
     
     context "when the hooks file does not exist" do
       it "should issue a warning" do
-        GitPusshuTen::Log.expects(:warning).with("Could not locate the hooks.rb file.")
+# <<<<<<< HEAD
+#         GitPusshuTen::Log.expects(:warning).with("Could not locate the hooks.rb file.")
+# =======
+        GitPusshuTen::Log.expects(:warning).with("Could not locate the hooks.rb file in #{File.expand_path(File.dirname(__FILE__))}/fixtures/hooks_not_exist.rb")
         hooks_staging.should == hooks_staging.parse!(File.expand_path(File.dirname(__FILE__) + '/fixtures/hooks_not_exist.rb'))
       end
       
