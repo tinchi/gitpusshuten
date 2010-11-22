@@ -25,7 +25,9 @@ module GitPusshuTen
       # Sets up a new UNIX user and configures it based on the .gitpusshuten/config.rb
       def perform_add!
         if not e.user_exists? # prompts root
-          ensure_git_installed!           
+          ensure_git_installed!
+          ensure_common_dependencies_are_installed!
+          
           message "It looks like #{y(c.user)} does not yet exist."
           message "Would you like to add #{y(c.user)} to #{y(c.application)} (#{y(c.ip)})?"
           if yes?
@@ -171,6 +173,13 @@ module GitPusshuTen
             exit
           end
         end
+      end
+
+      ##
+      # Installs common dependencies that applications typically use
+      # for XML parsing and image manipulation
+      def ensure_common_dependencies_are_installed!
+        e.install!('libxml2-dev libxslt1-dev imagemagick')
       end
 
       ##
