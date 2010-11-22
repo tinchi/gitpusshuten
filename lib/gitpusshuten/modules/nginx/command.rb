@@ -7,7 +7,9 @@ module GitPusshuTen
       example     "heavenly nginx setup staging environment            # Sets up a managable vhost environment."
       example     "heavenly nginx update-configuration for staging     # Only for Passenger users, when updating Ruby/Passenger versions."
       example     "heavenly nginx download-configuration from staging  # Downloads the Nginx configuration file from the specified environment."
+      example     "               download-config                      # Alias."
       example     "heavenly nginx upload-configuration to staging      # Uploads the NginX configuration file to the specified environment."
+      example     "               upload-config                        # Alias."
       example     "heavenly nginx create-vhost for production          # Creates a local vhost template for the specified environment."
       example     "heavenly nginx delete-vhost from production         # Deletes the remote vhost for the specified environment."
       example     "heavenly nginx upload-vhost to staging              # Uploads your local vhost to the server for the specified environment."
@@ -86,48 +88,36 @@ module GitPusshuTen
       def perform_setup!
         find_nginx!
         
-        ##
-        # Creates a tmp dir
-        local.create_tmp_dir!
-        
-        ##
-        # Downloads the NginX configuration file to tmp dir
-        e.scp_as_root(:download, @nginx_conf, local.tmp_dir)
-        
-        ##
-        # Set the path to the downloaded file
-        local_file = File.join(local.tmp_dir, @nginx_conf_name)
-        
-        if not File.read(local_file).include?('include sites-enabled/*;')
-          message "Configuring NginX configuration file."
-          
-          ##
-          # Inject the 'include sites-enabled/*'
-          contents = File.read(local_file).sub(/http(\s|\t|\n){0,}\{/, "http {\n\s\s\s\sinclude sites-enabled/*;\n")
-          File.open(local_file, 'w') do |file|
-            file << contents
-          end
+        if not e.execute_as_root("cat '#{@nginx_conf}'").include?('GIT PUSSHUTEN GENERATED NGINX CONFIGURATION FILE')
           
           ##
           # Make a backup of the old nginx.conf
-          message "Creating a backup of old NginX configuration file."
-          e.execute_as_root("cp '#{@nginx_conf}' '#{@nginx_conf}.backup.#{Time.now.to_i}'")
+          Spinner.return :message => "Creating a backup of the current NginX configuration file.." do
+            e.execute_as_root("cp '#{@nginx_conf}' '#{@nginx_conf}.backup.#{Time.now.to_i}'")
+            g('Done!')
+          end
           
           ##
-          # Upload the file back
-          message "Updating NginX configuration file."
-          e.scp_as_root(:upload, local_file, @nginx_conf)
+          # Replace the old NginX configuration file with the pre-configured one
+          Spinner.return :message => "Generating pre-configured NginX configuration file.." do
+            e.download_packages!("$HOME", :root)
+            e.execute_as_root("cp $HOME/gitpusshuten-packages/modules/nginx/nginx.conf '#{@nginx_conf}'")
+            e.clean_up_packages!("$HOME", :root)
+            g('Done!')
+          end
           
           ##
           # Create the vhosts dir on the server
-          message "Creating #{@nginx_vhosts_dir} directory."
-          e.execute_as_root("mkdir -p #{@nginx_vhosts_dir}")
+          Spinner.return :message => "Creating #{@nginx_vhosts_dir} directory.." do
+            e.execute_as_root("mkdir -p #{@nginx_vhosts_dir}")
+            g('Done!')
+          end
+          
+          if e.installed?('passenger')
+            perform_update_configuration!
+          end
+          
         end
-        
-        ##
-        # Removes the tmp dir
-        message "Cleaning up #{local.tmp_dir}"
-        local.remove_tmp_dir!
         
         ##
         # Create NginX directory
@@ -137,7 +127,7 @@ module GitPusshuTen
 
       ##
       # Downloads the NginX configuration file
-      def perform_download_config!
+      def perform_download_configuration!
         find_nginx!
         if not @nginx_conf
           error "Could not find the NginX configuration file in #{y(@nginx_conf)}"
@@ -153,14 +143,20 @@ module GitPusshuTen
       end
 
       ##
+      # Alias to perform_download_configuration!
+      def perform_download_config!
+        perform_download_configuration!
+      end
+
+      ##
       # Uploads the NginX configuration file
-      def perform_upload_config!
+      def perform_upload_configuration!
         find_nginx!
         if not e.directory?('/etc/nginx')
           error "Could not find the NginX installation directory in #{y('/etc/nginx')}"
           exit
         end
-
+        
         local_configuration_file = File.join(local.gitpusshuten_dir, 'nginx', 'nginx.conf')        
         if not File.exist?(local_configuration_file)
           error "Could not find the local NginX configuration file in #{y(local_configuration_file)}"
@@ -171,6 +167,12 @@ module GitPusshuTen
           e.scp_as_root(:upload, local_configuration_file, @nginx_conf)
           g('Done!')
         end
+      end
+
+      ##
+      # Alias to perform_upload_configuration!
+      def perform_upload_config!
+        perform_upload_configuration!
       end
 
       ##
@@ -283,7 +285,7 @@ module GitPusshuTen
 
         INFO
         
-        message "NginX will now be configured to work with the above versions. Is this correct?"
+        message "NginX will now be configured to work with the above versions. Is that OK?"
         exit unless yes?
         
         ##
@@ -329,6 +331,16 @@ module GitPusshuTen
           update.sub! /passenger_ruby \/usr\/local\/rvm\/wrappers\/(.+)\/ruby\;/,
                       "passenger_ruby /usr/local/rvm/wrappers/#{@ruby_version}/ruby;"
           
+          ##
+          # Uncomment any Phusion Passenger configuration if it is commented out
+          # since Phusion Passenger is enabled
+          update.sub!(/\#.+(passenger_ruby.+\;)/)           { $1 }
+          update.sub!(/\#.+(passenger_root.+\;)/)           { $1 }
+          update.sub!(/\#.+(passenger_spawn_method.+\;)/)   { $1 }
+          update.sub!(/\#.+(passenger_min_instances.+\;)/)  { $1 }
+          update.sub!(/\#.+(passenger_max_pool_size.+\;)/)  { $1 }
+          update.sub!(/\#.+(passenger_pool_idle_time.+\;)/) { $1 }
+          
           File.open(local_configuration_file, 'w') do |file|
             file << update
           end
@@ -356,7 +368,7 @@ module GitPusshuTen
         warning "then you should be able to just restart #{y('NginX')} right away since all application gems should still be in tact.\n\n"
         
         message "When ready, run the following command to restart #{y('NginX')} and have the applied updates take effect:"
-        standard "\n\s\s#{y("heavenly nginx restart for #{e.name}")}"
+        standard "\n\s\s#{y("heavenly nginx restart for #{e.name}")}\n\n"
       end
 
       def perform_download_vhost!
@@ -434,6 +446,13 @@ module GitPusshuTen
         if e.file?('/etc/nginx/nginx.conf')
           @nginx_conf     = '/etc/nginx/nginx.conf'
           @nginx_conf_dir = '/etc/nginx'
+        end
+        
+        ##
+        # Determines whether the configuration file was found or not
+        if @nginx_conf.nil?
+          error "Could not find the NginX configuration file. Has NginX been installed?"
+          exit
         end
         
         ##
