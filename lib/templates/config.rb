@@ -32,6 +32,7 @@ pusshuten 'My Application', :staging, :production do
     # m.add :nanoc
     # m.add :rvm
     # m.add :mysql
+    # m.add :redis
   end
 
 end
