@@ -108,7 +108,7 @@ module GitPusshuTen
     ##
     # Displays a list of available commands in the CLI
     def display_commands
-      puts "\nGit Pusshu Ten\n\s\s\s\sプッシュ点\n\n"
+      puts "\nGit Pusshu Ten\n\s\s\s\sプッシュ天\n\n"
       puts "[Aliases]\n\n"
       puts "\s\s#{y('gitpusshuten')}, #{y('heavenly')}, #{y('ten')}\n\n"
       puts "[Commands]\n\n"
@@ -122,7 +122,7 @@ module GitPusshuTen
     ##
     # Displays command specific details in the CLI
     def display_usage(command)
-      puts "\nGit Pusshu Ten\n\s\s\s\sプッシュ点\n\n"
+      puts "\nGit Pusshu Ten\n\s\s\s\sプッシュ天\n\n"
       puts "[Command]\n\n\s\s#{y(command)}\n\n"
       puts "[Description]\n\n\s\s#{get_constant_for(command).description}\n\n"
       puts "[Usage]\n\n\s\s#{y get_constant_for(command).usage}\n\n"
