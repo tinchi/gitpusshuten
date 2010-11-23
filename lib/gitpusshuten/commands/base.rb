@@ -253,6 +253,16 @@ module GitPusshuTen
         e.execute_as_user('')
       end
 
+      ##
+      # Will check to see if the user exists, if it doesn't then it'll
+      # display an error telling the user to set up a user first
+      def requires_user_existence!
+        if not e.user_exists?
+          error "You have to setup your user before you can perform this action."
+          exit
+        end
+      end
+
     end
   end
 end
