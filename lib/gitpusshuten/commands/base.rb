@@ -52,6 +52,17 @@ module GitPusshuTen
 
       ##
       # This is used by the "help" command to display the
+      # long version of the description
+      def self.long_description(value = nil)
+        if value.nil?
+          @long_description
+        else
+          @long_description = value
+        end
+      end
+
+      ##
+      # This is used by the "help" command to display the
       # usage of the command in the CLI
       def self.usage(value = nil)
         if value.nil?

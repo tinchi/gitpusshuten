@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gitpusshuten (0.0.4)
+    gitpusshuten (0.0.5)
       activesupport (~> 3.0.0)
       highline (~> 1.6.0)
       json (~> 1.4.0)
