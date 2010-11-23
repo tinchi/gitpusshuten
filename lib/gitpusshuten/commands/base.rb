@@ -214,7 +214,9 @@ module GitPusshuTen
         ##
         # Connect to the remote environment and perform the pre deploy hooks
         hooks.render_commands(hooks.pre_hooks).each do |name, commands|
-          GitPusshuTen::Log.message("Performing pre deploy hook: #{y(name)}")
+          adjusted_name = name.sub(/^\d+\)\s/, '')
+          
+          GitPusshuTen::Log.message("Performing pre deploy hook: #{y(adjusted_name)}")
           standard environment.execute_as_user("cd '#{e.app_dir}'; #{commands}")
         end
       end
@@ -232,7 +234,9 @@ module GitPusshuTen
         ##
         # Connect to the remote environment and perform the post deploy hooks
         hooks.render_commands(hooks.post_hooks).each do |name, commands|
-          GitPusshuTen::Log.message("Performing post deploy hook: #{y(name)}")
+          adjusted_name = name.sub(/^\d+\)\s/, '')
+          
+          GitPusshuTen::Log.message("Performing post deploy hook: #{y(adjusted_name)}")
           standard environment.execute_as_user("cd '#{e.app_dir}'; #{commands}")
         end
       end
