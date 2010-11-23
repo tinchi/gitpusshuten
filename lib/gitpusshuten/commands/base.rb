@@ -20,7 +20,15 @@ module GitPusshuTen
 
       ##
       # Contains the invoked command
-      attr_accessor :command
+      attr_writer :command
+      
+      ##
+      # Returns the underscored version of the command if it's a string
+      # otherwise just return the unmodified value (probably nil)
+      def command
+        return @command.underscore if @command.is_a?(String)
+        @command
+      end
 
       ##
       # This is a flag, that, when set to true, will invoke the
