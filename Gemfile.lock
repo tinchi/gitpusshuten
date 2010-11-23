@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    gitpusshuten (0.0.3)
+    gitpusshuten (0.0.4)
       activesupport (~> 3.0.0)
       highline (~> 1.6.0)
       json (~> 1.4.0)
@@ -14,6 +14,10 @@ GEM
   specs:
     activesupport (3.0.1)
     diff-lcs (1.1.2)
+    fuubar (0.0.2)
+      rspec (~> 2.0)
+      rspec-instafail (~> 0.1.4)
+      ruby-progressbar (~> 0.0.9)
     highline (1.6.1)
     infinity_test (0.2.0)
       watchr (>= 0.7)
@@ -32,9 +36,11 @@ GEM
     rspec-core (2.0.1)
     rspec-expectations (2.0.1)
       diff-lcs (>= 1.1.2)
+    rspec-instafail (0.1.4)
     rspec-mocks (2.0.1)
       rspec-core (~> 2.0.1)
       rspec-expectations (~> 2.0.1)
+    ruby-progressbar (0.0.9)
     watchr (0.7)
 
 PLATFORMS
@@ -42,6 +48,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (~> 3.0.0)
+  fuubar
   gitpusshuten!
   highline (~> 1.6.0)
   infinity_test
