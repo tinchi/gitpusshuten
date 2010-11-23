@@ -5,7 +5,7 @@ module GitPusshuTen
     ##
     # Displays a regular message without prefix
     def self.standard(message)
-      puts message
+      puts message unless message.nil?
       to_file message
     end
     

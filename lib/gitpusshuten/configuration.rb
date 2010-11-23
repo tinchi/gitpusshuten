@@ -118,5 +118,11 @@ module GitPusshuTen
       self
     end
 
+    ##
+    # Returns a (simple) sanitized version of the application name
+    def sanitized_app_name
+      application.gsub(' ', '_').downcase
+    end
+
   end
 end

@@ -125,6 +125,7 @@ module GitPusshuTen
       puts "\nGit Pusshu Ten\n\s\s\s\sプッシュ天\n\n"
       puts "[Command]\n\n\s\s#{y(command)}\n\n"
       puts "[Description]\n\n\s\s#{get_constant_for(command).description}\n\n"
+      puts "#{get_constant_for(command).long_description.gsub(/^/, "\s\s")}\n\n" unless get_constant_for(command).long_description.nil?
       puts "[Usage]\n\n\s\s#{y get_constant_for(command).usage}\n\n"
       puts "[Examples]\n#{get_constant_for(command).example}\n\n"
       puts "For a list of all commands: #{y 'heavenly help'}"

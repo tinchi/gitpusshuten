@@ -1,19 +1,14 @@
 ##
-# Will check if the app_root/config/database.yml.<environment> exists
-# if it does, it'll overwrite the database.yml with that environment database.
-# If it does not exist, it'll leave the database.yml unchanged.
-post "Setting proper database for environment. (Rails)" do
-  run "if [[ -f 'config/database.yml.#{environment}' ]]; then " +
-      "echo 'config/database.yml.#{environment} found! Using this one instead of config/database.yml';" +
-      "echo 'Overwriting config/database.yml with config/database.yml.#{environment}';" +
-      "mv 'config/database.yml.#{environment}' 'config/database.yml'; " +
+# If the user uploaded his own database.yml file (using the Active Record CLI) then
+# it'll overwrite the repository version (if it exists) before migrating.
+post "Configure and Migrate Database (Active Record)" do
+  run "if [[ -f '#{configuration.path}/modules/active_record/#{configuration.sanitized_app_name}.#{environment}.database.yml' ]]; then " +
+      "cp '#{configuration.path}/modules/active_record/#{configuration.sanitized_app_name}.#{environment}.database.yml' " +
+      "'#{configuration.path}/#{configuration.sanitized_app_name}.#{environment}/config/database.yml'; " +
+      "echo 'Uploaded \"database.yml\" file found! Will be using it for the #{environment} environment!'; " +
+      "else echo 'Could not find any (pre) uploaded database.yml, skipping.'; " +
       "fi"
-end
-
-##
-# Will create the database if it doesn't exist yet.
-# Migrates the database.
-post "Migrate Database (Active Record)" do
+  
   run "rake db:create"
   run "rake db:migrate"
 end

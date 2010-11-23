@@ -138,9 +138,9 @@ describe GitPusshuTen::Hooks do
     describe '#render_commands_as_string' do
       it do
         hooks.render_commands(hooks.post_hooks).should == {
-          :render_output                => 'rake render:output;',
-          :restart_nginx_and_passenger  => '/etc/init.d/nginx stop;sleep 1;/etc/init.d/nginx start;mkdir tmp;touch tmp/restart.txt;',
-          :ensure_correct_branch        => 'git commit -am "Commit and Ensuring";git checkout master;'
+          '0) render_output'                => 'rake render:output;',
+          '1) restart_nginx_and_passenger'  => '/etc/init.d/nginx stop;sleep 1;/etc/init.d/nginx start;mkdir tmp;touch tmp/restart.txt;',
+          '2) ensure_correct_branch'        => 'git commit -am "Commit and Ensuring";git checkout master;'
         }
       end
     end

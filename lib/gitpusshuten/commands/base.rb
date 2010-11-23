@@ -20,7 +20,15 @@ module GitPusshuTen
 
       ##
       # Contains the invoked command
-      attr_accessor :command
+      attr_writer :command
+      
+      ##
+      # Returns the underscored version of the command if it's a string
+      # otherwise just return the unmodified value (probably nil)
+      def command
+        return @command.underscore if @command.is_a?(String)
+        @command
+      end
 
       ##
       # This is a flag, that, when set to true, will invoke the
@@ -39,6 +47,17 @@ module GitPusshuTen
           @description
         else
           @description = value
+        end
+      end
+
+      ##
+      # This is used by the "help" command to display the
+      # long version of the description
+      def self.long_description(value = nil)
+        if value.nil?
+          @long_description
+        else
+          @long_description = value
         end
       end
 
@@ -206,7 +225,9 @@ module GitPusshuTen
         ##
         # Connect to the remote environment and perform the pre deploy hooks
         hooks.render_commands(hooks.pre_hooks).each do |name, commands|
-          GitPusshuTen::Log.message("Performing pre deploy hook: #{y(name)}")
+          adjusted_name = name.sub(/^\d+\)\s/, '')
+          
+          GitPusshuTen::Log.message("Performing pre deploy hook: #{y(adjusted_name)}")
           standard environment.execute_as_user("cd '#{e.app_dir}'; #{commands}")
         end
       end
@@ -224,7 +245,9 @@ module GitPusshuTen
         ##
         # Connect to the remote environment and perform the post deploy hooks
         hooks.render_commands(hooks.post_hooks).each do |name, commands|
-          GitPusshuTen::Log.message("Performing post deploy hook: #{y(name)}")
+          adjusted_name = name.sub(/^\d+\)\s/, '')
+          
+          GitPusshuTen::Log.message("Performing post deploy hook: #{y(adjusted_name)}")
           standard environment.execute_as_user("cd '#{e.app_dir}'; #{commands}")
         end
       end
@@ -239,6 +262,16 @@ module GitPusshuTen
       # Makes the user authenticate itself as a user
       def prompt_for_user_password!
         e.execute_as_user('')
+      end
+
+      ##
+      # Will check to see if the user exists, if it doesn't then it'll
+      # display an error telling the user to set up a user first
+      def requires_user_existence!
+        if not e.user_exists?
+          error "You have to setup your user before you can perform this action."
+          exit
+        end
       end
 
     end
