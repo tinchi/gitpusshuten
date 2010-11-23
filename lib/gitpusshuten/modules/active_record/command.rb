@@ -2,14 +2,20 @@
 module GitPusshuTen
   module Commands
     class ActiveRecord < GitPusshuTen::Commands::Base
-      description "[Module] Active Record commands."
-      usage       "active_record <command> for <enviroment>"
-      example     "heavenly active_record create_configuration    # Creates a template for your remote database."
-      example     "                       create_config           # Alias."  
-      example     "heavenly active_record upload_configuration    # Uploads your configuration file to the remote server."
-      example     "                       upload_config           # Alias."
-      example     "heavenly active_record download_configuration  # Downloads your configuration file from the remote server."
-      example     "                       download_config         # Alias."
+      description       "[Module] Active Record commands."
+      long_description  "By using the Active Record CLI utility you can avoid checking your database.yml into your git repository.\n" +
+                        "Use the examples below to create, and then upload your custom database.yml for the desired environment to the server\n" +
+                        "and the Active Record module will handle the rest! After the deployment of your application this uploaded database.yml file will\n" +
+                        "be placed inside your APP_ROOT/config/database.yml. If the database.yml file already exists there, it'll overwrite it.\n" +
+                        "This is a security measure, since it's generally bad practice to store any sensitive information in your Git repository."
+                        
+      usage             "active_record <command> for <enviroment>"
+      example           "heavenly active_record create_configuration    # Creates a template for your remote database."
+      example           "                       create_config           # Alias."  
+      example           "heavenly active_record upload_configuration    # Uploads your configuration file to the remote server."
+      example           "                       upload_config           # Alias."
+      example           "heavenly active_record download_configuration  # Downloads your configuration file from the remote server."
+      example           "                       download_config         # Alias."
 
       def initialize(*objects)
         super
