@@ -25,9 +25,6 @@ module GitPusshuTen
       # Sets up a new UNIX user and configures it based on the .gitpusshuten/config.rb
       def perform_add!
         if not e.user_exists? # prompts root
-          ensure_git_installed!
-          ensure_common_dependencies_are_installed!
-          
           message "It looks like #{y(c.user)} does not yet exist."
           message "Would you like to add #{y(c.user)} to #{y(c.application)} (#{y(c.ip)})?"
           if yes?
@@ -47,6 +44,20 @@ module GitPusshuTen
           error "If you just want to reconfigure the user without removing it, run the following ommand:"
           standard "\n\s\s#{(y("heavenly user reconfigure for #{e.name}"))}"
           exit
+        end
+        
+        ##
+        # Install Git if it isn't installed yet
+        Spinner.return :message => "Ensuring #{y('Git')} is installed.." do
+          ensure_git_installed!
+          g('Done!')
+        end
+        
+        ##
+        # Install common application dependencies like xmllib and imagemagick
+        Spinner.return :message => "Ensuring #{y('common applictation dependencies')} are installed.." do
+          ensure_common_dependencies_are_installed!
+          g('Done!')
         end
         
         ##
@@ -123,7 +134,7 @@ module GitPusshuTen
         end
         
         unless e.ssh_key_installed? # prompts root
-          Spinner.return :message => "Installing SSH Key.." do
+          Spinner.return :message => "Installing #{"SSH Key".color(:yellow)}.." do
             e.install_ssh_key!
             g("Done!")
           end
@@ -142,7 +153,7 @@ module GitPusshuTen
         end
         
         unless e.root_ssh_key_installed? # prompts root
-          Spinner.return :message => "Installing SSH Key.." do
+          Spinner.return :message => "Installing #{"SSH Key".color(:yellow)}.." do
             e.install_root_ssh_key!
             g("Done!")
           end
@@ -154,25 +165,7 @@ module GitPusshuTen
       ##
       # Ensures that Git is installed on the remote server
       def ensure_git_installed!
-        if not e.installed?('git') #prompts root
-          warning "It is required that you have #{y('Git')} installed at #{y(c.ip)}."
-          warning "Could not find #{y('Git')}, would you like to install it?"
-          
-          if yes?
-            Spinner.return :message => "Installing #{y('Git')}.." do
-              e.install!('git-core')
-              @git_installed = e.installed?('git')
-              if @git_installed
-                g("Done!")
-              else
-                r("Unable to install Git.")
-              end
-            end
-            exit unless @git_installed
-          else
-            exit
-          end
-        end
+        e.install!('git-core')
       end
 
       ##

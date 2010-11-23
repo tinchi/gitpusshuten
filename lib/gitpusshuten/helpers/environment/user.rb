@@ -15,7 +15,7 @@ module GitPusshuTen
         ##
         # Adds the user to the sudoers file
         def add_user_to_sudoers!
-          execute_as_root("echo '#{c.user} ALL=(ALL) ALL' >> /etc/sudoers")
+          execute_as_root("echo '#{c.user} ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers")
         end
 
         ##
@@ -28,7 +28,7 @@ module GitPusshuTen
         ##
         # Checks to see if the user is already in the sudoers file or not
         def user_in_sudoers?
-          return true if execute_as_root("cat /etc/sudoers").include?("#{c.user} ALL=(ALL) ALL")
+          return true if execute_as_root("cat /etc/sudoers").include?("#{c.user} ALL=(ALL) NOPASSWD: ALL")
           false
         end
 
