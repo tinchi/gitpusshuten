@@ -15,8 +15,6 @@ module GitPusshuTen
         @command = cli.arguments.shift
         
         help if command.nil? or e.name.nil?
-        
-        @command = @command.underscore
       end
 
       ##
