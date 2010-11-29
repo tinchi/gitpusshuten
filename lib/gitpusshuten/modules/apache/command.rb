@@ -25,8 +25,6 @@ module GitPusshuTen
         
         help if command.nil? or e.name.nil?
         
-        @command = @command.underscore
-        
         ##
         # Default Configuration
         @installation_dir         = "/etc/apache2"
@@ -95,7 +93,7 @@ module GitPusshuTen
         local_apache_dir = File.join(local.gitpusshuten_dir, 'apache')
         local.execute("mkdir -p '#{local_apache_dir}'")
         Spinner.return :message => "Downloading Apache2 configuration file to #{y(local_apache_dir)}.." do
-          scp_as_root(:download, "/etc/apache2/apache2.conf", local_apache_dir)
+          e.scp_as_root(:download, "/etc/apache2/apache2.conf", local_apache_dir)
           g('Done!')
         end
       end
@@ -121,7 +119,7 @@ module GitPusshuTen
         end
         
         Spinner.return :message => "Uploading Apache2 configuration file #{y(local_configuration_file)}.." do
-          scp_as_root(:upload, local_configuration_file, "/etc/apache2/apache2.conf")
+          e.scp_as_root(:upload, local_configuration_file, "/etc/apache2/apache2.conf")
           g('Done!')
         end
       end

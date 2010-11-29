@@ -15,8 +15,6 @@ module GitPusshuTen
         
         help if command.nil? or e.name.nil?
         
-        @command = @command.underscore
-        
         ##
         # Default Configuration
         @installation_dir           = "/etc/redis"
