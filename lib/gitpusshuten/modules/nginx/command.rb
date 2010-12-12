@@ -133,7 +133,7 @@ module GitPusshuTen
         end
         
         local_nginx_dir = File.join(local.gitpusshuten_dir, 'nginx')
-        local.execute("mkdir -p '#{local_nginx_dir}'")
+        FileUtils.mkdir_p(local_nginx_dir)
         Spinner.return :message => "Downloading NginX configuration file to #{y(local_nginx_dir)}.." do
           e.scp_as_root(:download, @nginx_conf, local_nginx_dir)
           g('Done!')
@@ -385,7 +385,7 @@ module GitPusshuTen
           exit unless yes?
         end
         
-        local.execute("mkdir -p #{File.join(local.gitpusshuten_dir, 'nginx')}")
+        FileUtils.mkdir_p(File.join(local.gitpusshuten_dir, 'nginx'))
         Spinner.return :message => "Downloading vhost.." do
           e.scp_as_root(:download, remote_vhost, local_vhost)
           g("Finished downloading!")
@@ -407,7 +407,7 @@ module GitPusshuTen
       ##
       # Creates a vhost template file if it doesn't already exist.
       def create_vhost_template_file!
-        local.execute("mkdir -p '#{File.join(local.gitpusshuten_dir, 'nginx')}'")
+        FileUtils.mkdir_p(File.join(local.gitpusshuten_dir, 'nginx'))
         vhost_file  = File.join(local.gitpusshuten_dir, 'nginx', "#{e.name}.vhost")
         
         create_file = true

@@ -48,9 +48,9 @@ module GitPusshuTen
         end
         
         if confirm_perform
-          local.execute("mkdir -p '#{working_directory}/.gitpusshuten'")
+          FileUtils.mkdir_p("#{working_directory}/.gitpusshuten")
           Dir[File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'templates', '*.rb'))].each do |template|
-            local.execute("cp '#{template}' '#{working_directory}/.gitpusshuten/#{template.split('/').last}'")
+            FileUtils.cp(template, "#{working_directory}/.gitpusshuten/#{template.split('/').last}")
           end
           message "Git Pusshu Ten (プッシュ天) initialized in: #{y(working_directory)}!"
         end
