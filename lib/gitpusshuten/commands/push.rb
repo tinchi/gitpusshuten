@@ -14,12 +14,18 @@ module GitPusshuTen
       def initialize(*objects)
         super
         perform_hooks!
-        
+
         @command = cli.arguments.shift
         @type    = cli.arguments.shift
-        
-        help if type.nil? or e.name.nil?
-        
+
+        if %(production staging).include?(command) and not type
+          c.environment = command
+          @type = (command == 'production') ? 'master' : 'develop'
+          @command = 'branch'
+        end
+
+        help unless type and e.name
+
         set_remote!
       end
 
@@ -49,23 +55,6 @@ module GitPusshuTen
       def set_remote!
         git.remove_remote(e.name) if git.has_remote?(e.name)
         git.add_remote(e.name, "ssh://#{c.user}@#{c.ip}:#{c.port}/#{e.app_dir}")
-      end
-
-      ##
-      # Conventional command actions
-
-      ##
-      # Pushes the master branch to the production environment.
-      def perform_production!
-        message "Pushing branch master to the production environment."
-        git.push(:branch, "master").to("production")
-      end
-      
-      ##
-      # Pushes the master branch to the production environment.
-      def perform_stage!
-        message "Pushing branch develop to the stage environment."
-        git.push(:branch, "develop").to("staging")
       end
 
     end
