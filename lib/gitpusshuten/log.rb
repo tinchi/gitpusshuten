@@ -51,7 +51,7 @@ module GitPusshuTen
         ##
         # Create the log directory if it doesn't exist
         if not File.directory?(log_dir)
-          %x[mkdir -p '#{log_dir}']
+          FileUtils.mkdir_p(log_dir)
         end
         
         ##
