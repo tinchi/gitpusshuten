@@ -91,7 +91,7 @@ module GitPusshuTen
         end
         
         local_apache_dir = File.join(local.gitpusshuten_dir, 'apache')
-        local.execute("mkdir -p '#{local_apache_dir}'")
+        FileUtils.mkdir_p(local_apache_dir)
         Spinner.return :message => "Downloading Apache2 configuration file to #{y(local_apache_dir)}.." do
           e.scp_as_root(:download, "/etc/apache2/apache2.conf", local_apache_dir)
           g('Done!')
@@ -137,7 +137,7 @@ module GitPusshuTen
           exit
         end
         
-        local.execute("mkdir -p #{File.join(local.gitpusshuten_dir, 'apache')}")
+        FileUtils.mkdir_p(File.join(local.gitpusshuten_dir, 'apache'))
         local_vhost = File.join(local.gitpusshuten_dir, 'apache', "#{e.name}.vhost")
         if File.exist?(local_vhost)
           warning "#{y(local_vhost)} already exists. Do you want to overwrite it?"
@@ -336,7 +336,7 @@ module GitPusshuTen
       ##
       # Creates a vhost template file if it doesn't already exist.
       def create_vhost_template_file!
-        local.execute("mkdir -p '#{File.join(local.gitpusshuten_dir, 'apache')}'")
+        FileUtils.mkdir_p(File.join(local.gitpusshuten_dir, 'apache'))
         vhost_file  = File.join(local.gitpusshuten_dir, 'apache', "#{e.name}.vhost")
         
         create_file = true
