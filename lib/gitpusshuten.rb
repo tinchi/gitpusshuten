@@ -19,7 +19,7 @@ if Config::CONFIG['host_os'] =~ /mswin|mingw/
   end unless ENV['ANSICON']
 end
 
-Dir[File.expand_path(File.join(File.dirname(__FILE__), 'gitpusshuten/**/*'))].each do |file|
+Dir[File.expand_path(File.join(File.dirname(__FILE__), 'gitpusshuten/**/*'))].sort.each do |file|
   if not File.directory?(file) and not file =~ /\/modules\/.+\/hooks\.rb/
     require file
   end
