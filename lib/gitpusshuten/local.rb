@@ -22,13 +22,13 @@ module GitPusshuTen
     ##
     # Create tmp_dir
     def create_tmp_dir!
-      %x[mkdir -p '#{tmp_dir}']
+      FileUtils.mkdir_p(tmp_dir)
     end
 
     ##
     # Removes everything inside the tmp_dir
     def remove_tmp_dir!
-      %x[rm -rf '#{tmp_dir}']
+      FileUtils.rm_rf(tmp_dir)
     end
 
   end

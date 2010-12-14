@@ -3,7 +3,7 @@ module GitPusshuTen
   module Commands
     class Redis < GitPusshuTen::Commands::Base
       description "[Module] Redis commands."
-      usage       "redis <command> for <enviroment>"
+      usage       "redis <command> for <environment>"
       example     "heavenly redis install to staging                # Installs Redis (system wide) and downloads config template."
       example     "heavenly redis upload-configuration to staging   # Uploads the Redis configuration template to the server, will install Redis if not already present."
       example     "               upload-config to staging          # Alias."
