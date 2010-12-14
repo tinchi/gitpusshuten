@@ -47,8 +47,8 @@ module GitPusshuTen
         def ensure_aptitude_installed!
           if not installed?('aptitude')
             Spinner.return :message => "Ensuring package manager is installed and up to date.." do
-              execute_as_root!('apt-get update; apt-get install -y aptitude')
-              g('Done!')
+              execute_as_root('apt-get update; apt-get install -y aptitude')
+              'Done!'.color(:green)
             end
           end
         end
