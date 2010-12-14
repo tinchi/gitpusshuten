@@ -4,7 +4,7 @@ module GitPusshuTen
       description "[Module] NginX commands."
       usage       "nginx <command> <for|from|to> <environment> (environment)"
       example     "heavenly nginx install to staging                   # Installs the Nginx web server"
-      example     "heavenly nginx setup staging environment            # Sets up a managable vhost environment."
+      example     "heavenly nginx setup staging environment            # Sets up a manageable vhost environment."
       example     "heavenly nginx update-configuration for staging     # Only for Passenger users, when updating Ruby/Passenger versions."
       example     "heavenly nginx download-configuration from staging  # Downloads the Nginx configuration file from the specified environment."
       example     "               download-config                      # Alias."

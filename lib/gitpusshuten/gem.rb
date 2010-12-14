@@ -6,7 +6,7 @@ module GitPusshuTen
     attr_accessor :gem
 
     ##
-    # Instantiages a new gem
+    # Instantiates a new gem
     def initialize(name)
       @gem = JSON.parse(open(File.join(base_url, "#{name}.json")).read)
     end
