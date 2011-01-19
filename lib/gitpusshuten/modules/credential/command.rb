@@ -86,7 +86,7 @@ module GitPusshuTen
         end
       end
       
-      def initializer_code
+      def initializer_codex
         """ if Rails.env == 'production'
               raw_config = File.read('#{Rails.root}/config/credential/credential.yml')
             else
@@ -102,7 +102,7 @@ module GitPusshuTen
         if e.file?(path_to_file)
           warning "#{y(path_to_file)} already exists, do you want to overwrite it?"
           create_file = yes?
-        end          
+        end
       end
       def ask_to_overwrite_local(path_to_file)
         create_file = true
