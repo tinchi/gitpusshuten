@@ -33,7 +33,7 @@ module GitPusshuTen
         <%=CREDENTIALS[:database_password]=%>
         "
         message "Adding credentials.rb to your git repo"
-        `git add config/initializers/credentials.rb` #Todo, you might have multiple credentials files
+        `git add #{@local_credentials_file_initializer}` #use something else then ticks
       end
             
       def perform_download!
@@ -55,7 +55,7 @@ module GitPusshuTen
           message "You can either initialize credentials or download existing from the server"
           exit
         end
-        if ask_to_overwrite_remote(@credentials_dir)
+        if e.ask_to_overwrite_remote(@credentials_dir)
           Spinner.return :message => "Uploading credentials to the server" do
             e.scp_as_user(:upload, @local_credentials_dir, @credentials_dir, {:recursive => true})
             g("credentials folder finished uploading")
@@ -74,7 +74,7 @@ module GitPusshuTen
           error "There are no credentials in #{e.home_dir}"
           exit        
         end
-        if ask_to_overwrite_local(@local_credentials_dir)
+        if e.ask_to_overwrite_local(@local_credentials_dir)
           Spinner.return :message => "Downloading credentials from the server.." do
             e.scp_as_user(:download, @credentials_dir, local.gitpusshuten_dir, {:recursive => true})
             g("Finished downloading!")
@@ -91,7 +91,7 @@ module GitPusshuTen
           create_initializer
           exit
         end
-        if ask_to_overwrite_local(@local_credentials_file_initializer)
+        if e.ask_to_overwrite_local(@local_credentials_file_initializer)
           Spinner.return :message => "Downloading credentials initializer from the server.." do
           e.scp_as_user(:download, @credentials_file_initializer, @local_credentials_file_initializer)
           g("Finished downloading!")
@@ -105,7 +105,7 @@ module GitPusshuTen
       def create_credentials
         FileUtils.mkdir_p(@local_credentials_dir)
         message "Going to create the credentials.yml in #{@local_credentials_dir}"
-        if ask_to_overwrite_local(@local_credentials_file_yml)
+        if e.ask_to_overwrite_local(@local_credentials_file_yml)
           Spinner.return :message => "Creating #{y('credentials.yml')}.." do
             local_credentials_yml = File.new(@local_credentials_file_yml, "w")
             local_credentials_yml.write(yaml_template)
@@ -117,7 +117,7 @@ module GitPusshuTen
       
       def create_initializer
         message "Going to create the initializer credentials.rb in #{File.join(Dir.pwd, 'config', 'initializers')}"
-        if ask_to_overwrite_local(@local_credentials_file_initializer)
+        if e.ask_to_overwrite_local(@local_credentials_file_initializer)
           Spinner.return :message => "Creating #{y('credentials.rb')}.." do
             local_credentials_rb = File.new(@local_credentials_file_initializer, "w")
             local_credentials_rb.write(initializer_code)
@@ -145,24 +145,6 @@ CREDENTIALS = YAML.load(raw_config)[Rails.env].symbolize_keys}
       end
       
 
-#Extract these into helper methods, the e.exist? method is new and needs to replace a some snippets in the code base
-      def ask_to_overwrite_remote(path_to_file)
-        create_file = true
-        if e.exist?(path_to_file)
-          warning "#{y(path_to_file)} already exists, do you want to overwrite it?"
-          create_file = yes?
-        end
-        create_file
-      end
-      
-      def ask_to_overwrite_local(path_to_file)
-        create_file = true
-        if File.exist?(path_to_file)
-          warning "#{y(path_to_file)} already exists, do you want to overwrite it?"
-          create_file = yes?
-        end
-        create_file
-      end
             
     end
   end

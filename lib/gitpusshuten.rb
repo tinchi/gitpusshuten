@@ -26,4 +26,20 @@ Dir[File.expand_path(File.join(File.dirname(__FILE__), 'gitpusshuten/**/*'))].so
 end
 
 module GitPusshuTen
+  ##
+  # Wrapper for coloring ANSI/CLI Yellow
+  def self.y(value)
+    value.to_s.color(:yellow)
+  end
+
+  ##
+  # Helper method for prompting the user
+  def self.yes?
+    choose do |menu|
+      menu.prompt = ''
+      menu.choice('yes') { true  }
+      menu.choice('no')  { false }
+    end
+  end
+
 end
