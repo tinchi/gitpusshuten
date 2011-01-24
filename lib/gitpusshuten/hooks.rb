@@ -36,7 +36,7 @@ module GitPusshuTen
       if File.exist?(hooks_file)
         instance_eval(File.read(hooks_file))
       else
-        GitPusshuTen::Log.warning "Could not locate the hooks.rb file in #{hooks_file}"
+        GitPusshuTen::Log.warning "Could not locate the hooks.rb file."
       end
       self
     end
@@ -132,14 +132,21 @@ module GitPusshuTen
     # Takes an array of hooks and renders them a Hash that
     # contains the name of the hook, as well as all the commands
     # bundled in a single string, separated by semi-colons.
+    #
+    # Note: Using a hack to avoid "Hash" sorting issues between Ruby versions
+    # which cause the hooks to invoke in the incorrect order. This has been addressed
+    # by prefixing the Hash's "key" with the index of the array and sorting based on that.
+    # Then the \d+\)\s gets #sub'd for friendly user output 
     def render_commands(hooks)
       hooks_hash = {}
-      hooks.each do |hook|
-        hooks_hash[hook.name] = ''
+      
+      hooks.each_with_index do |hook, index|
+        hooks_hash["#{index}) #{hook.name}"] = ''
         hook.commands.each do |command|
-          hooks_hash[hook.name] << "#{command};".gsub(/;{2,}/, ';')
+          hooks_hash["#{index}) #{hook.name}"] += "#{command};".gsub(/;{2,}/, ';')
         end
       end
+      
       hooks_hash
     end
 

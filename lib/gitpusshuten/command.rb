@@ -108,7 +108,7 @@ module GitPusshuTen
     ##
     # Displays a list of available commands in the CLI
     def display_commands
-      puts "\nGit Pusshu Ten\n\s\s\s\sプッシュ点\n\n"
+      puts "\nGit Pusshu Ten\n\s\s\s\sプッシュ天\n\n"
       puts "[Aliases]\n\n"
       puts "\s\s#{y('gitpusshuten')}, #{y('heavenly')}, #{y('ten')}\n\n"
       puts "[Commands]\n\n"
@@ -122,9 +122,10 @@ module GitPusshuTen
     ##
     # Displays command specific details in the CLI
     def display_usage(command)
-      puts "\nGit Pusshu Ten\n\s\s\s\sプッシュ点\n\n"
+      puts "\nGit Pusshu Ten\n\s\s\s\sプッシュ天\n\n"
       puts "[Command]\n\n\s\s#{y(command)}\n\n"
       puts "[Description]\n\n\s\s#{get_constant_for(command).description}\n\n"
+      puts "#{get_constant_for(command).long_description.gsub(/^/, "\s\s")}\n\n" unless get_constant_for(command).long_description.nil?
       puts "[Usage]\n\n\s\s#{y get_constant_for(command).usage}\n\n"
       puts "[Examples]\n#{get_constant_for(command).example}\n\n"
       puts "For a list of all commands: #{y 'heavenly help'}"
@@ -142,10 +143,14 @@ module GitPusshuTen
     def y(value)
       value.to_s.color(:yellow)
     end
-    
+
+    ##
+    # Classifies the command, but re-pluralizes it in case
+    # it ended with the 's' character to ensure the correct
+    # command is being invoked
     def classify_with_plural(word)
       if word =~ /s$/
-        word.classify + "s"
+        word.classify + 's'
       else
         word.classify
       end

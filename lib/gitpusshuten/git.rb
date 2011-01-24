@@ -48,10 +48,12 @@ module GitPusshuTen
     def ignore!
       if File.exist?('.gitignore')
         if not File.read('.gitignore').include?('.gitpusshuten/**/*')
-          %x[echo '.gitpusshuten/**/*' >> .gitignore]
+          File.open('.gitignore', 'a') do |file|
+            file << "\n.gitpusshuten/**/*"
+          end
         end
       else
-        %x[echo '.gitpusshuten/**/*' >> .gitignore]
+        %x[echo ".gitpusshuten/**/*" >> .gitignore]
       end
     end
 

@@ -16,6 +16,11 @@ module GitPusshuTen
           return true if execute_as_root("if [[ -f '#{path}' ]]; then exit; else echo 1; fi").nil?
           false
         end
+        
+        def exist?(path)
+          return true if execute_as_root("if [[ -e '#{path}' ]]; then exit; else echo 1; fi").nil?
+          false
+        end
 
         ##
         # Performs a single command on the remote environment as a user

@@ -29,7 +29,7 @@ module GitPusshuTen
         
         ##
         # Allows for more arguments to be passed in after the regular expression.
-        # These arguments will be converted to an array and apended to the "@arguments" array
+        # These arguments will be converted to an array and appended to the "@arguments" array
         if $5.is_a?(String)
           @arguments += $5.split(' ')
         end

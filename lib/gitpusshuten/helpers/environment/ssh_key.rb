@@ -35,7 +35,7 @@ module GitPusshuTen
         ##
         # Returns the default (local) SSH key path
         def ssh_key_path
-          File.join(ENV['HOME'], '.ssh', 'id_rsa.pub')
+          File.join(ENV['HOME'], '.ssh', c.ssh_key || 'id_rsa.pub')
         end
 
         ##

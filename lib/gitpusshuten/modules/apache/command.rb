@@ -6,7 +6,9 @@ module GitPusshuTen
       example     "heavenly apache install to staging                   # Installs the Apache2 web server"
       example     "heavenly apache update-configuration for staging     # Only for Passenger users, when updating Ruby/Passenger versions."
       example     "heavenly apache download-configuration from staging  # Downloads the Apache2 configuration file from the specified environment."
+      example     "                download-config                      # Alias."
       example     "heavenly apache upload-configuration to staging      # Uploads the Apache2 configuration file to the specified environment."
+      example     "                upload-config                        # Alias."
       example     "heavenly apache create-vhost for production          # Creates a local vhost template for the specified environment."
       example     "heavenly apache delete-vhost from production         # Deletes the remote vhost for the specified environment."
       example     "heavenly apache upload-vhost to staging              # Uploads your local vhost to the server for the specified environment."
@@ -22,8 +24,6 @@ module GitPusshuTen
         @command = cli.arguments.shift
         
         help if command.nil? or e.name.nil?
-        
-        @command = @command.underscore
         
         ##
         # Default Configuration
@@ -84,23 +84,29 @@ module GitPusshuTen
 
       ##
       # Downloads the Apache2 configuration file
-      def perform_download_config!
+      def perform_download_configuration!
         if not e.file?('/etc/apache2/apache2.conf')
           error "Could not find the Apache2 configuration file in #{y('/etc/apache2/apache2.conf')}"
           exit
         end
         
         local_apache_dir = File.join(local.gitpusshuten_dir, 'apache')
-        local.execute("mkdir -p '#{local_apache_dir}'")
+        FileUtils.mkdir_p(local_apache_dir)
         Spinner.return :message => "Downloading Apache2 configuration file to #{y(local_apache_dir)}.." do
-          scp_as_root(:download, "/etc/apache2/apache2.conf", local_apache_dir)
+          e.scp_as_root(:download, "/etc/apache2/apache2.conf", local_apache_dir)
           g('Done!')
         end
       end
 
       ##
+      # Alias to perform_download_configuration!
+      def perform_download_config!
+        perform_download_configuration!
+      end
+
+      ##
       # Uploads the Apache2 configuration file
-      def perform_upload_config!
+      def perform_upload_configuration!
         if not e.directory?('/etc/apache2')
           error "Could not find the Apache2 installation directory in #{y('/etc/apache2')}"
           exit
@@ -113,9 +119,15 @@ module GitPusshuTen
         end
         
         Spinner.return :message => "Uploading Apache2 configuration file #{y(local_configuration_file)}.." do
-          scp_as_root(:upload, local_configuration_file, "/etc/apache2/apache2.conf")
+          e.scp_as_root(:upload, local_configuration_file, "/etc/apache2/apache2.conf")
           g('Done!')
         end
+      end
+
+      ##
+      # Alias to perform_upload_configuration!
+      def perform_upload_config!
+        perform_upload_configuration!
       end
 
       def perform_download_vhost!
@@ -125,7 +137,7 @@ module GitPusshuTen
           exit
         end
         
-        local.execute("mkdir -p #{File.join(local.gitpusshuten_dir, 'apache')}")
+        FileUtils.mkdir_p(File.join(local.gitpusshuten_dir, 'apache'))
         local_vhost = File.join(local.gitpusshuten_dir, 'apache', "#{e.name}.vhost")
         if File.exist?(local_vhost)
           warning "#{y(local_vhost)} already exists. Do you want to overwrite it?"
@@ -324,7 +336,7 @@ module GitPusshuTen
       ##
       # Creates a vhost template file if it doesn't already exist.
       def create_vhost_template_file!
-        local.execute("mkdir -p '#{File.join(local.gitpusshuten_dir, 'apache')}'")
+        FileUtils.mkdir_p(File.join(local.gitpusshuten_dir, 'apache'))
         vhost_file  = File.join(local.gitpusshuten_dir, 'apache', "#{e.name}.vhost")
         
         create_file = true

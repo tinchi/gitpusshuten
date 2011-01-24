@@ -5,7 +5,7 @@ module GitPusshuTen
     ##
     # Displays a regular message without prefix
     def self.standard(message)
-      puts message
+      puts message unless message.nil?
       to_file message
     end
     
@@ -51,7 +51,7 @@ module GitPusshuTen
         ##
         # Create the log directory if it doesn't exist
         if not File.directory?(log_dir)
-          %x[mkdir -p '#{log_dir}']
+          FileUtils.mkdir_p(log_dir)
         end
         
         ##

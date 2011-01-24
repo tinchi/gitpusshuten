@@ -1,4 +1,4 @@
-Git Pusshuten ( プッシュ点 )
+Git Pusshuten ( プッシュ天 )
 
 Heavenly Git-based (Application) Deployment!
 

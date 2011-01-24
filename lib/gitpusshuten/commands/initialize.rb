@@ -2,9 +2,9 @@
 module GitPusshuTen
   module Commands
     class Initialize < GitPusshuTen::Commands::Base
-      description "Initializes Git Pusshu Ten (プッシュ点) with the working directory."
+      description "Initializes Git Pusshu Ten (プッシュ天) with the working directory."
       usage       "initialize"
-      example     "heavenly initialize  # Initializes Git Pusshu Ten (プッシュ点) with the working directory."
+      example     "heavenly initialize  # Initializes Git Pusshu Ten (プッシュ天) with the working directory."
 
       ##
       # Initialize specific attributes/arguments
@@ -24,7 +24,7 @@ module GitPusshuTen
       ##
       # Performs the Initialize command
       def perform!
-        message "Would you like to initialize Git Pusshu Ten (プッシュ点) with #{working_directory}?"
+        message "Would you like to initialize Git Pusshu Ten (プッシュ天) with #{working_directory}?"
         if yes?
           copy_templates!
           if not git.initialized?
@@ -41,18 +41,18 @@ module GitPusshuTen
       # to the .gitpusshuten inside the working directory
       def copy_templates!
         if File.directory?(File.join(working_directory, '.gitpusshuten'))
-          warning "Git Pusshu Ten (プッシュ点) is already initialized in #{y(working_directory)}."
+          warning "Git Pusshu Ten (プッシュ天) is already initialized in #{y(working_directory)}."
           warning "Re-initializing it will cause it to overwrite the current #{y("config.rb")} and #{y("hooks.rb")} files."
           warning "Are you sure you wish to continue?"
           @confirm_perform = yes?
         end
         
         if confirm_perform
-          local.execute("mkdir -p '#{working_directory}/.gitpusshuten'")
+          FileUtils.mkdir_p("#{working_directory}/.gitpusshuten")
           Dir[File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'templates', '*.rb'))].each do |template|
-            local.execute("cp '#{template}' '#{working_directory}/.gitpusshuten/#{template.split('/').last}'")
+            FileUtils.cp(template, "#{working_directory}/.gitpusshuten/#{template.split('/').last}")
           end
-          message "Git Pusshu Ten (プッシュ点) initialized in: #{y(working_directory)}!"
+          message "Git Pusshu Ten (プッシュ天) initialized in: #{y(working_directory)}!"
         end
       end
 

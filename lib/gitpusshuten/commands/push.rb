@@ -5,19 +5,27 @@ module GitPusshuTen
       usage       "push <command> <type> to <environment>"
       example     "heavenly push branch develop to staging                                    # Pushes the specified branch to the staging environment."
       example     "heavenly push tag 1.0.3 to staging                                         # Pushes the specified tag to the staging environment."
-      example     "heavenly push production                                                   # Pushes the master branch to the production environment."
-      example     "heavenly push staging                                                      # Pushes the develop branch to the staging environment."
+      example     "heavenly push ref 2dbec02aa0b8604b8512e2fcbb8aac582c7f6a73 to production   # Pushes the specified ref to the production environment."
+      example     "heavenly push production                                                   # Pushes the master branch to the production environment. (Conventional)"
+      example     "heavenly push staging                                                      # Pushes the develop branch to the staging environment. (Conventional)"
+
       attr_accessor :type
 
       def initialize(*objects)
         super
         perform_hooks!
-        
+
         @command = cli.arguments.shift
         @type    = cli.arguments.shift
-        
-        help if type.nil? or e.name.nil?
-        
+
+        if %(production staging).include?(command) and not type
+          c.environment = command
+          @type = (command == 'production') ? 'master' : 'develop'
+          @command = 'branch'
+        end
+
+        help unless type and e.name
+
         set_remote!
       end
 
@@ -27,21 +35,7 @@ module GitPusshuTen
         message "Pushing branch #{y(type)} to the #{y(e.name)} environment."
         git.push(:branch, type).to(e.name)
       end
-      
-      ##
-      # Pushes the master branch to the production environment.
-      def perform_production!
-        message "Pushing branch master to the production environment."
-        git.push(:branch, "master").to("production")
-      end
-      
-      ##
-      # Pushes the master branch to the production environment.
-      def perform_stage!
-        message "Pushing branch master to the stage environment."
-        git.push(:branch, "develop").to("staging")
-      end
-      
+
       ##
       # Pushes the specified tag to the remote environment.
       def perform_tag!

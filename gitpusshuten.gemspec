@@ -1,7 +1,11 @@
+# encoding: utf-8
+
+require File.expand_path(File.dirname(__FILE__) + '/lib/gitpusshuten/version')
+
 Gem::Specification.new do |gem|
 
   gem.name        = 'gitpusshuten'
-  gem.version     = "0.0.3" #GitPusshuTen::VERSION
+  gem.version     = GitPusshuTen::VERSION
   gem.platform    = Gem::Platform::RUBY
   gem.authors     = 'Michael van Rooijen'
   gem.email       = 'meskyanichi@gmail.com'
