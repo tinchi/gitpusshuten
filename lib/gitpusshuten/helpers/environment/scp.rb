@@ -5,16 +5,19 @@ module GitPusshuTen
 
         ##
         # Establishes a SCP session for "root"
-        def scp_as_user(direction, from, to)
+        def scp_as_user(direction, from, to, options = nil)
           while true
+            
             begin
-              Net::SCP.start(c.ip, 'root', {
+              Net::SCP.start(c.ip, c.user, {
                 :password   => @user_password,
                 :passphrase => c.passphrase,
                 :port       => c.port
               }) do |scp|
-                return scp.send("#{direction}!", from, to)
-              end              
+                
+                return scp.send("#{direction}!", from, to, options)
+              end
+                            
             rescue Net::SCP::AuthenticationFailed
               if @user_attempted
                 GitPusshuTen::Log.error "Password incorrect. Please retry."
@@ -24,12 +27,13 @@ module GitPusshuTen
               end
               @user_password = ask('') { |q| q.echo = false }
             end
+            
           end
         end
 
         ##
         # Establishes a SCP session for "root"
-        def scp_as_root(direction, from, to)
+        def scp_as_root(direction, from, to, options = nil)
           while true
             begin
               Net::SCP.start(c.ip, 'root', {
@@ -37,7 +41,7 @@ module GitPusshuTen
                 :passphrase => c.passphrase,
                 :port       => c.port
               }) do |scp|
-                return scp.send("#{direction}!", from, to)
+                return scp.send("#{direction}!", from, to, options)
               end              
             rescue Net::SSH::AuthenticationFailed
               if @root_attempted
