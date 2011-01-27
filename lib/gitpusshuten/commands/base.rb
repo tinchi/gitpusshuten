@@ -134,17 +134,17 @@ module GitPusshuTen
       end
 
       ##
-      # Wrapper for coloring ANSI/CLI Yellow
-      def y(value)
-        value.to_s.color(:yellow)
-      end
-
-      ##
       # Wrapper for coloring ANSI/CLI Red
       def r(value)
         value.to_s.color(:red)
       end
 
+      ##
+      # Wrapper for coloring ANSI/CLI Yellow
+      def y(value)
+        value.to_s.color(:yellow)
+      end
+      
       ##
       # Helper method for prompting the user
       def yes?

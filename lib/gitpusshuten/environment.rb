@@ -66,5 +66,7 @@ module GitPusshuTen
       execute_as_user("rm -rf #{app_dir}")
     end
 
+
+
   end
 end
