@@ -48,7 +48,7 @@ module GitPusshuTen
         ##
         # Install RVM (system wide)
         Spinner.return :message => "Installing #{y('RVM')}.." do
-          e.execute_as_root("cd $HOME; wget -O rvm-install-system-wide --no-check-certificate http://bit.ly/rvm-install-system-wide; bash rvm-install-system-wide; rm rvm-install-system-wide;")
+          e.execute_as_root("cd $HOME; wget -O rvm-install-system-wide --no-check-certificate https://github.com/wayneeseguin/rvm/raw/1.3.0/contrib/install-system-wide; bash rvm-install-system-wide; rm rvm-install-system-wide;")
           g("Done!")
         end
 
