@@ -11,7 +11,7 @@ require 'highline/import'
 require 'rainbow'
 require 'json'
 
-if Config::CONFIG['host_os'] =~ /mswin|mingw/
+if RbConfig::CONFIG['host_os'] =~ /mswin|mingw/
   begin
     require 'win32console'
   rescue LoadError
