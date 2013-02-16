@@ -7,5 +7,5 @@ group :test do
   gem 'rspec'
   gem 'mocha'
   gem 'infinity_test'
-  gem 'fuubar'
+  # gem 'fuubar'
 end
